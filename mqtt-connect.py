@@ -1018,7 +1018,7 @@ def process_message(mp, text_payload, is_encrypted):
                     print(f"Message processing complete, now sending welcome menu to {from_node}")
                 # Send welcome menu in a separate thread with a small delay
                 def delayed_auto_response():
-                    time.sleep(3.0)  # Wait 3 seconds
+                    time.sleep(6.0)  # Wait 6 seconds for Raspberry Pi processing
                     # Use the exact same function that works for test direct messages
                     send_auto_response_via_test_function(from_node)
                 
@@ -1734,6 +1734,9 @@ def send_auto_response_via_test_function(target_id):
         
         if debug:
             print(f"Sending fortune to {target_id}: {fortune_text}")
+        
+        # Add delay for Raspberry Pi processing before sending
+        time.sleep(2.0)
         
         generate_mesh_packet(target_id, encoded_message)
         
