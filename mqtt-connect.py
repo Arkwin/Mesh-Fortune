@@ -112,13 +112,13 @@ def get_node_topic_for_direct_message(destination_id):
     base_topic = node_topic_map.get(destination_id, None)
     
     if base_topic:
-        # Extract root topic and reconstruct with destination node ID
+        # Extract root topic and reconstruct with OUR node ID in recipient's region
         # base_topic format: "msh/US/VA/RVA/2/e/LongFast/!somenode"
         topic_parts = base_topic.split('/')
         if len(topic_parts) >= 6:
             root_topic_part = '/'.join(topic_parts[:5]) + '/'
-            destination_hex = '!' + hex(destination_id)[2:]
-            direct_topic = root_topic_part + channel + "/" + destination_hex
+            our_node_hex = '!' + hex(node_number)[2:]  # Use OUR node ID, not destination
+            direct_topic = root_topic_part + channel + "/" + our_node_hex
             if debug:
                 print(f"Converted base topic {base_topic} to direct topic {direct_topic} for node {destination_id}")
             return direct_topic
@@ -1321,13 +1321,13 @@ def generate_mesh_packet(destination_id, encoded_message):
                 else:
                     print(f"MQTT publish failed to {broadcast_topic} with code: {result.rc}")
     else:
-        # For direct messages, try to send to recipient's last known region with their node ID
+        # For direct messages, try to send to recipient's last known region from our node
         recipient_topic = get_node_topic_for_direct_message(destination_id)
         
         if recipient_topic:
-            # Send to the specific topic where recipient was last seen
+            # Send from our node in the specific region where recipient was last seen
             if debug:
-                print(f"Sending direct message to recipient's targeted topic: {recipient_topic}")
+                print(f"Sending direct message from our node in recipient's region: {recipient_topic}")
                 print(f"Payload size: {len(payload)} bytes")
             
             result = client.publish(recipient_topic, payload)
@@ -1339,28 +1339,25 @@ def generate_mesh_packet(destination_id, encoded_message):
                 else:
                     print(f"Direct message failed to {recipient_topic} with code: {result.rc}")
         else:
-            # Fallback: broadcast to all topics with recipient-specific topics
+            # Fallback: broadcast from our node to all regions
             if debug:
-                print(f"No known topic for recipient {destination_id}, broadcasting to all regions")
+                print(f"No known topic for recipient {destination_id}, broadcasting from our node to all regions")
                 print(f"Payload size: {len(payload)} bytes")
             
-            # Convert destination_id to hex format for topic
-            recipient_hex = '!' + hex(destination_id)[2:]
-            
-            # Publish to all root topics with recipient's node ID
+            # Publish from our node to all root topics
             for i, root_topic in enumerate(root_topics):
-                direct_topic = root_topic + channel + "/" + recipient_hex
+                broadcast_topic = root_topic + channel + "/" + node_name
                 if debug:
-                    print(f"Publishing direct message to topic {i+1}/{len(root_topics)}: {direct_topic}")
+                    print(f"Publishing direct message from our node to topic {i+1}/{len(root_topics)}: {broadcast_topic}")
                 
-                result = client.publish(direct_topic, payload)
+                result = client.publish(broadcast_topic, payload)
                 
                 if debug:
-                    print(f"MQTT publish result for {direct_topic}: {result.rc}")
+                    print(f"MQTT publish result for {broadcast_topic}: {result.rc}")
                     if result.rc == 0:
-                        print(f"Direct message published successfully to {direct_topic}")
+                        print(f"Direct message published successfully to {broadcast_topic}")
                     else:
-                        print(f"Direct message failed to {direct_topic} with code: {result.rc}")
+                        print(f"Direct message failed to {broadcast_topic} with code: {result.rc}")
                 
                 # Add small delay between publications to avoid overwhelming the broker
                 if i < len(root_topics) - 1:  # Don't delay after the last topic
