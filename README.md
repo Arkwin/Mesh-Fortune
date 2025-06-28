@@ -1,4 +1,4 @@
-## Mesh Mail - A Nodeless MQTT Client that allows users to send messages across MQTT Topcics!
+## Mesh Fortune - A Fortune Cookie Bot for Meshtastic Networks!
 
 Many thanks to and inspiration from:<br>
  https://github.com/arankwende/meshtastic-mqtt-client & https://github.com/joshpirihi/meshtastic-mqtt & https://github.com/pdxlocations/connect<br>
@@ -6,49 +6,47 @@ Many thanks to and inspiration from:<br>
 
 ### Installation
 
-
-Then create a virtual environment and install Connect:
+Create a virtual environment and install Mesh Fortune:
 ```bash
-python3 -m venv connect
-cd connect && source bin/activate
+python3 -m venv mesh-fortune
+cd mesh-fortune && source bin/activate
 pip3 install meshtastic paho-mqtt cryptography
-git clone https://github.com/Arkwin/Mesh-Mail.git
-cd Mesh-Mail
+git clone https://github.com/Arkwin/Mesh-Fortune.git
+cd Mesh-Fortune
 ```
 
-### Running the Client
+### Running the Fortune Bot
 ```bash
 python mqtt-connect.py
 ```
 
-### Use 
+### How It Works
 
-## Mesh Mail System
+## Mesh Fortune System
 
-This system provides a persistent mail service for Meshtastic users across multiple regions. Users can send and receive mail messages that are stored in a database, allowing for asynchronous communication even when nodes are offline.
+This system provides a fun fortune cookie bot for Meshtastic users across multiple regions. When someone sends a direct message to your fortune bot node, it automatically replies with a random fortune from the `fortunes.txt` file.
 
-### Getting Started with Mail
+### Getting Your Fortune
 
-**Accessing the Mail System:**
-Send any direct message to the mail server node (MMX) to receive the welcome menu.
+**Getting a Fortune:**
+Simply send any direct message to the fortune bot node and you'll receive a random fortune in response!
 
-### Using the Mail System
+### Fortune Database
 
-Once you send a message you will be greated with your personal inbox and mail options either enter the mail number to read the message or C to compose a message to someone on any of the connected MQTT topics.
+The bot reads from `fortunes.txt` which contains:
+- Inspirational quotes
+- Funny sayings  
+- Motivational messages
+- Random wisdom
+- Silly observations
 
-#### Composing Mail
-1. Send `C` to enter compose mode
-2. Enter recipient node ID in format `!12345678` (hex format)
-3. Enter subject line when prompted
-4. Enter message content when prompted
-5. Mail is automatically sent and recipient receives notification
-
+You can customize the fortunes by editing the `fortunes.txt` file - just put one fortune per line.
 
 ### Multi-Region Support
 
-The mail system automatically works across different Meshtastic regions:
-- **Supported Regions:** DMV, VA, MD, VA/RVA
-- **Cross-Region Delivery:** Messages automatically route between regions
+The fortune bot automatically works across different Meshtastic regions:
+- **Supported Regions:** Configurable via `config.ini`
+- **Cross-Region Delivery:** Fortunes sent across different mesh regions
 - **Smart Routing:** System remembers where users were last seen for efficient delivery
 
 ### Configuration
@@ -56,22 +54,41 @@ The mail system automatically works across different Meshtastic regions:
 Edit `config.ini` to customize:
 - **MQTT Settings:** Broker, credentials, topics
 - **Node Information:** Your node number, names, location  
-- **Mail Timing:** Notification delays and throttling
+- **Regional Topics:** Add multiple root topics for cross-region support
 - **Debug Options:** Detailed logging and message tracking
 
 ### Database Storage
 
-- Mail messages are stored persistently in SQLite database
 - Node information is cached for faster lookups
 - Message history is maintained for debugging
 - Automatic database setup on first run
+- Position tracking (optional)
 
 ### Features
 
-- ✅ **Persistent Storage** - Messages saved even when nodes offline
-- ✅ **Cross-Region Delivery** - Works across multiple Meshtastic regions  
-- ✅ **Smart Notifications** - Users notified of new mail with emoji
-- ✅ **Anti-Spam Protection** - Throttling prevents message flooding
-- ✅ **Multi-Topic Support** - Automatic routing to correct regional topics
-- ✅ **Database Persistence** - All mail stored in SQLite database
-- ✅ **Menu Navigation** - Easy-to-use text-based interface
+- 🔮 **Random Fortunes** - Picks from 90+ different fortunes
+- 🌐 **Cross-Region Delivery** - Works across multiple Meshtastic regions  
+- ⚡ **Instant Response** - Replies immediately to any direct message
+- 🎯 **Smart Routing** - Automatic routing to correct regional topics
+- 📝 **Customizable** - Edit fortunes.txt to add your own messages
+- 🔧 **Multi-Topic Support** - Configurable for different mesh regions
+- 📊 **Database Tracking** - Logs interactions and node information
+
+### Example Fortunes
+
+Here are some examples of what the bot might send:
+- "Nothing is impossible. Except Monday mornings."
+- "A comfort zone is a magical place where nothing ever grows."
+- "Go confidently in the direction of your dreams."
+- "Curiosity kills boredom. Nothing can kill curiosity."
+- "Better ask twice than lose yourself once."
+
+### Adding Your Own Fortunes
+
+To add custom fortunes:
+1. Open `fortunes.txt` in a text editor
+2. Add one fortune per line
+3. Save the file
+4. Restart the bot to load new fortunes
+
+The bot will randomly select from all available fortunes each time someone messages it!
