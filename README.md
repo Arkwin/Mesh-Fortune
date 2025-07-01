@@ -17,7 +17,28 @@ cd Mesh-Fortune
 
 ### Running the Fortune Bot
 ```bash
-python mqtt-connect.py
+python fortune-bot.py
+```
+
+### Configuration
+
+Edit `config.ini` to customize:
+- **Node Settings:** Your node number, long/short name
+- **MQTT Settings:** Broker, credentials, topics
+- **Regional Topics:** Add multiple root topics for cross-region support  
+- **Debug Options:** Enable detailed logging
+
+Example `config.ini`:
+```ini
+[DEFAULT]
+node_number = 2882380807
+long_name = FortuneBot
+short_name = FB
+mqtt_broker = mqtt.meshtastic.org
+root_topic = msh/US/2/e/,msh/US/DMV/2/e/,msh/US/VA/2/e/
+channel = LongFast
+key = AQ==
+debug = true
 ```
 
 ### How It Works
@@ -49,20 +70,12 @@ The fortune bot automatically works across different Meshtastic regions:
 - **Cross-Region Delivery:** Fortunes sent across different mesh regions
 - **Smart Routing:** System remembers where users were last seen for efficient delivery
 
-### Configuration
-
-Edit `config.ini` to customize:
-- **MQTT Settings:** Broker, credentials, topics
-- **Node Information:** Your node number, names, location  
-- **Regional Topics:** Add multiple root topics for cross-region support
-- **Debug Options:** Detailed logging and message tracking
-
 ### Database Storage
 
 - Node information is cached for faster lookups
 - Message history is maintained for debugging
 - Automatic database setup on first run
-- Position tracking (optional)
+- Lightweight SQLite database (`fortune.db`)
 
 ### Features
 
@@ -73,6 +86,7 @@ Edit `config.ini` to customize:
 - 📝 **Customizable** - Edit fortunes.txt to add your own messages
 - 🔧 **Multi-Topic Support** - Configurable for different mesh regions
 - 📊 **Database Tracking** - Logs interactions and node information
+- 🧹 **Clean Code** - Simplified codebase focused only on fortune functionality
 
 ### Example Fortunes
 
@@ -89,6 +103,15 @@ To add custom fortunes:
 1. Open `fortunes.txt` in a text editor
 2. Add one fortune per line
 3. Save the file
-4. Restart the bot to load new fortunes
+4. The bot will automatically include new fortunes in random selection
 
 The bot will randomly select from all available fortunes each time someone messages it!
+
+### Files
+
+- `fortune-bot.py` - Main clean fortune bot application
+- `mqtt-connect.py` - Original full-featured version (mail system included)
+- `fortunes.txt` - Fortune database (one fortune per line)
+- `config.ini` - Configuration file
+- `models.py` - Database models
+- `fortune.db` - SQLite database (auto-created)
