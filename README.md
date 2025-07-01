@@ -17,7 +17,7 @@ cd Mesh-Fortune
 
 ### Running the Fortune Bot
 ```bash
-python fortune-bot.py
+python mqtt-connect.py
 ```
 
 ### Configuration
